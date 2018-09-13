@@ -86,9 +86,13 @@
 			}
 			x += dx;
 			if((y+dy) > canvas.height - ballRadius) {
-				dy = -dy;
+				alert('Game Over');
+				document.location.reload();
 			}
 			else if ((y + dy) < 0 - ballRadius) {
+				dy = -dy;
+			}
+			else if((y + dy) > canvas.height - ballRadius - paddleHeight && ((x + dx) >  paddleX) && (x+dx) < paddleX + paddleWidth) {
 				dy = -dy;
 			}
 			y += dy;
