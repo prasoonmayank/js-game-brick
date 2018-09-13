@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Gamedev canvas</title>
+	<style type="text/css">
+		* {
+			padding: 0;
+			margin: 0;
+		}
+
+		canvas {
+			background: #eee;
+			display: block;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+<body>
+
+	<canvas id="myCanvas" width="480" height="240"></canvas>
+
+	<script>
+		var canvas = document.getElementById('myCanvas');
+		var ctx = canvas.getContext('2d');
+
+		var x = canvas.width / 2;
+		var y = canvas.height /2;
+		var t = 1;
+
+		function drawBall() {
+			ctx.beginPath();
+			ctx.arc(x, y, 20, 0, Math.PI*2);
+			ctx.fillStyle = "blue";
+			ctx.fill();
+			ctx.closePath();
+		}
+
+		function draw() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			drawBall();
+			x+=t;
+			y+=t;
+		}
+		setInterval(draw, 10);
+
+		// All info lies between beginPath and closePath
+		// A rectange is defined using .rect method
+
+		// The idea behind moving the ball is to clear and repaint the ball again and again.
+		// One method is to run a draw function at fixed time intervals, depending upon the requirements.
+		// Just updating the ball position in space would not work as we are not clearing the old frame again and again.
+		// Thus, it is important that we clean the frame again and again.
+
+	</script>
+
+</body>
+</html>
