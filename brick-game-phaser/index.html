@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Gamedev Phaser Workshop - lesson 02</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+      <script type="text/javascript" src="js/phaser.min.js"></script>
+  <style type="text/css">
+    * { padding: 0; margin: 0; }
+  </style>
+  <!-- TODO: Missing CoffeeScript 2 -->
+
+  <script type="text/javascript">
+
+  	// The phaser has the arcade physics, p2 and 
+
+    window.onload=function(){
+	      
+	var game = new Phaser.Game(480, 320, Phaser.AUTO, null, {preload: preload, create: create, update: update});
+
+	var ball;
+	var paddle;
+	var bricks;
+	var newBrick;
+	var brickInfo;
+	var scoreText;
+	var score = 0;
+
+	function preload() {
+
+		// This is used to scale the canvas based on the screen size
+	    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+	    game.scale.pageAlignHorizontally = true;
+	    game.scale.pageAlignVertically = true;
+	    game.stage.backgroundColor = '#eee';
+
+	    // Used to load the images into the variable as mentioned
+		game.load.image('ball', 'img/ball.png');
+		game.load.image('paddle', 'img/paddle.png')
+		game.load.image('brick', 'img/brick.png')
+	}
+	function create() {
+		// This is used to set the phaser physics system to the arcade system
+		game.physics.startSystem(Phaser.Physics.ARCADE);
+
+		// Used to add the ball variable to the canvas
+		ball = game.add.sprite(game.world.width*0.5, game.world.height-25, 'ball');
+		ball.anchor.set(0.5);
+		// Used to enable the game physics
+		game.physics.enable(ball, Phaser.Physics.ARCADE);
+		// Used to set the velocity in the set (vx, vy)
+		ball.body.velocity.set(150, -150);
+		// Used to set the ball to collide at the balls at the wall boundary
+		ball.body.collideWorldBounds = true;
+		// Sets the boundary velocity conditions. That is how much will the ball bounce from the wall
+		ball.body.bounce.set(1);
+		// Used to add the paddle variable to the screen
+		paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
+		paddle.anchor.set(0.5, 1);
+		// Enable the game physics to the paddle
+		game.physics.enable(paddle, Phaser.Physics.ARCADE);
+		paddle.body.immovable = true;
+		game.physics.arcade.checkCollision.down = false;
+		ball.checkWorldBounds = true;
+		ball.events.onOutOfBounds.add( function () {
+			alert('Game Over');
+			location.reload();
+		}, this);
+		initBricks();
+		// text defines the p[osition of the upcoming text, actual text and the fill style
+		scoreText = game.add.text(5, 5, 'Points: 0', {font: '18px Arial', fill: '#0095DD'});
+	}
+	function initBricks() {
+		brickInfo = {
+			width: 50,
+			height: 20,
+			count: {
+				row: 3,
+				col: 7
+			},
+			offset: {
+				top: 50,
+				left: 30
+			},
+			padding: 10
+		};
+		bricks = game.add.group();
+		for( c=0; c<brickInfo.count.col; c++) {
+			for(r=0; r<brickInfo.count.row; r++) {
+				// Specifying the initial dimensions
+				var brickX = (c*(brickInfo.width+brickInfo.padding))+brickInfo.offset.left;
+				var brickY = (r*(brickInfo.height+brickInfo.padding))+brickInfo.offset.top;
+				// This initiates the brick in the canvas
+				newBrick = game.add.sprite(brickX, brickY, 'brick');
+				game.physics.enable(newBrick, Phaser.Physics.ARCADE);
+				newBrick.body.immovable = true;
+				newBrick.anchor.set(0.5);
+				bricks.add(newBrick);
+			}
+		}
+	}
+	function update() {
+		game.physics.arcade.collide(ball, paddle);
+		game.physics.arcade.collide(ball, bricks, ballHitBrick);
+		// Sets the paddle tracking the mouse movement
+		paddle.x = game.input.x || game.world.width*0.5;
+	}
+	function ballHitBrick(ball, brick) {
+		brick.kill();
+		score += 10;
+		scoreText.setText('Points: '+score);
+	}
+
+	    }
+
+</script>
+
+</head>
+<body>
+  
+  
+  <script>
+    // tell the embed parent frame the height of the content
+    if (window.parent && window.parent.parent){
+      window.parent.parent.postMessage(["resultsFrame", {
+        height: document.body.getBoundingClientRect().height,
+        slug: "6a64vecL"
+      }], "*")
+    }
+  </script>
+</body>
+</html>
